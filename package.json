@@ -1,21 +1,17 @@
 {
-  "name": "pdfsign",
+  "name": "pdf-signer",
   "version": "1.0.0",
-  "description": "",
+  "description": "PDF Signer",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "prestart": "npm install",
+    "start": "node index.js"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@chilkat/ck-node18-win64": "^9.50.93",
-    "archiver": "^5.3.1",
-    "cookie-parser": "^1.4.6",
-    "express": "^4.18.2",
+    "@chilkat/ck-node18-win64": "^9.50.94",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
     "express-fileupload": "^1.4.0",
-    "express-session": "^1.17.3",
-    "multer": "^1.4.5-lts.1",
-    "uuid": "^9.0.0"
+    "opn": "^6.0.0"
   }
 }

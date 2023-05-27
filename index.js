@@ -1,88 +1,59 @@
-const express = require("express");
-const fileUpload = require("express-fileupload");
-var session = require("express-session");
-const cookieParser = require("cookie-parser");
-const { readdir } = require("fs").promises;
-const fs = require("fs");
-
-const app = express();
-const port = 3000;
-const oneDay = 1000 * 60 * 60 * 24;
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use(cookieParser());
-
-app.use(
-  session({
-    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
-    saveUninitialized: true,
-    cookie: { maxAge: oneDay },
-    resave: false,
-  })
-);
-
-app.use(express.static("public"));
-
-app.use(
-  fileUpload({
-    useTempFiles: true,
-    tempFileDir: "/tmp/",
-  })
-);
-
-getFileList("output").then((files) => {
-  files.forEach((file) => {
-    var date = createdDate(file).birthtime.getTime();
-    var fiveMin = 1000 * 60 * 1;
-    var isPast = new Date().getTime() - date < fiveMin ? false : true;
-
-    console.log(file, isPast);
-    if (isPast) {
-      fs.unlinkSync(file);
-    } else {
-      setTimeout(() => {
-        fs.unlinkSync(file);
-      }, 60000);
+const { exec } = require('child_process');
+exec('npm install', (error) => {
+    if (error) {
+        console.error('Failed to install packages:', error);
+        return;
     }
-  });
-});
 
-require("./route/login")(app);
-app.use(checkLogin);
-require("./route/sign")(app);
-require("./route/download")(app);
+    const fs = require('fs');
+    const path = require('path');
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
-function checkLogin(req, res, next) {
-  if (!req.session.userid) {
-    return res.status(401).send({
-      message: "user not found",
+    const express = require('express');
+    const fileUpload = require('express-fileupload');
+    const { signPDFWithPFX } = require('./signature');
+    const opn = require('opn');
+    const app = express();
+
+
+    app.set('view engine', 'ejs');
+
+    app.use(express.static('public'));
+
+    app.use(fileUpload({
+        useTempFiles: true,
+        tempFileDir: './tmp/'
+    }));
+    // Render the index page
+    app.get('/', (req, res) => {
+        res.render('index');
     });
-  }
-  next();
-}
 
-function createdDate(file) {
-  const value = fs.statSync(file);
+    // Handle file upload
+    app.post('/upload', (req, res) => {
+        const pfxPath = './key/name.pfx';
+        const pfxPassword = '12345';
+        var outputPath = `C:/pdfSigned`;
+        var path_exist = fs.existsSync(path);
+        if (!path_exist) {
+            fs.mkdirSync(outputPath, { recursive: true });
+        }
+        Promise.all(
+            req.files.files.map((file, index) => {
+                const outputPdfPath = path.join(outputPath, `/signed_${file.name}`);
+                return signPDFWithPFX(file, outputPdfPath, pfxPath, pfxPassword);
+            })
+        ).then(() => {
+            res.status(200).send({ message: 'PDFs signed successfully.' });
+        }).catch((error) => {
+            console.log('Failed to sign PDFs:', error);
+            res.status(500).send({ message: `Failed to save signed PDF` });
+        })
+    });
 
-  return value;
-}
-
-async function getFileList(dirName) {
-  let files = [];
-  const items = await readdir(dirName, { withFileTypes: true });
-
-  for (const item of items) {
-    if (item.isDirectory()) {
-      files = [...files, ...(await getFileList(`${dirName}/${item.name}`))];
-    } else {
-      files.push(`${dirName}/${item.name}`);
-    }
-  }
-
-  return files;
-}
+    // Start the server
+    const port = 3001;
+    app.listen(port, () => {
+        console.log(`Server is running on http://localhost:${port}`);
+        opn('http://localhost:' + port);
+    });
+});
