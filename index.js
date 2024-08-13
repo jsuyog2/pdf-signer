@@ -32,7 +32,7 @@ exec('npm install', (error) => {
     app.post('/upload', (req, res) => {
         const pfxPath = './key/name.pfx';
         const pfxPassword = '12345';
-        var outputPath = `C:/pdfSigned`;
+        var outputPath = `./pdfSigned`;
         var path_exist = fs.existsSync(path);
         if (!path_exist) {
             fs.mkdirSync(outputPath, { recursive: true });
@@ -51,7 +51,7 @@ exec('npm install', (error) => {
     });
 
     // Start the server
-    const port = 3001;
+    const port = 3000;
     app.listen(port, () => {
         console.log(`Server is running on http://localhost:${port}`);
         opn('http://localhost:' + port);

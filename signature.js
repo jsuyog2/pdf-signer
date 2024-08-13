@@ -1,4 +1,4 @@
-const chilkat = require('@chilkat/ck-node18-win64');
+const chilkat = require('@chilkat/ck-node22-win64');
 
 async function signPDFWithPFX(inputPdfPath, outputPdfPath, pfxPath, pfxPassword) {
     const pdf = new chilkat.Pdf();

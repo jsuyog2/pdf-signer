@@ -8,7 +8,7 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "@chilkat/ck-node18-win64": "^9.50.94",
+    "@chilkat/ck-node22-win64": "^9.5099.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-fileupload": "^1.4.0",
