@@ -1,0 +1,15 @@
+{
+  /**
+   * @description Babel configuration file.
+   * 
+   * This file specifies the Babel presets to be used for transforming JavaScript code.
+   * 
+   * @property {Array} presets - An array of Babel presets to use.
+   * 
+   * @example
+   * {
+   *   "presets": ["@babel/preset-env"]
+   * }
+   */
+  "presets": ["@babel/preset-env"]
+}

@@ -9,20 +9,28 @@
 </head>
 
 <body class="bg-gray-100 flex items-center justify-center h-screen">
+    <!-- Main container for the PDF signer application -->
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h1 class="text-2xl font-semibold mb-4">PDF Signer</h1>
+        
+        <!-- Form for uploading PDFs -->
         <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data" class="space-y-4">
             <div class="mb-4">
+                <!-- Label for file input -->
                 <label for="fileUpload" class="block text-lg font-medium">Upload PDF(s):</label>
+                <!-- File input for selecting multiple PDFs -->
                 <input type="file" id="fileUpload" name="files" multiple required class="mt-2">
             </div>
+            <!-- Submit button for signing PDFs -->
             <button type="submit"
                 class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Sign
                 PDFs</button>
         </form>
+
+        <!-- Area for displaying messages -->
         <div id="message" class="mt-4"></div>
 
-        <!-- Progress bar -->
+        <!-- Progress bar for showing the signing progress -->
         <div id="progressContainer" class="mt-4 hidden">
             <p id="progressText" class="font-medium text-gray-700"></p>
             <div id="progressBar" class="w-full bg-gray-200 rounded-full h-4">
@@ -30,12 +38,15 @@
             </div>
         </div>
 
-        <!-- List of signed PDFs -->
+        <!-- Section for listing signed PDFs -->
         <div id="pdfList" class="mt-6">
             <h2 class="text-xl font-semibold mb-2">Signed PDFs</h2>
+            <!-- Unordered list for displaying signed PDFs -->
             <ul id="pdfListItems" class="list-disc list-inside space-y-1"></ul>
         </div>
     </div>
+
+    <!-- Scripts for socket.io and application functionality -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="/script.js"></script>
 </body>

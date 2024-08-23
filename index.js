@@ -3,11 +3,13 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const fileUpload = require('express-fileupload');
-const { signPDFWithPFX } = require('./signature');
+const { signPDFWithSmartCard } = require('./signature');
 const opn = require('opn');
 const rimraf = require('rimraf');
 
-// Run npm install and start the server
+/**
+ * Installs npm packages and starts the Express server.
+ */
 exec('npm install', (error) => {
     if (error) {
         console.error('Failed to install packages:', error);
@@ -16,21 +18,28 @@ exec('npm install', (error) => {
 
     const app = express();
     const port = 3000;
-    const pfxPath = path.join(__dirname, 'key', 'name.pfx');
-    const pfxPassword = '12345';
-    const tmpDir = path.join(__dirname, 'tmp'); 
+    const SmartCardPin = '12345'; // Smart Card PIN for signing
+    const tmpDir = path.join(__dirname, 'tmp'); // Temporary directory for file uploads
 
     // Set up view engine and middleware
     app.set('view engine', 'ejs');
     app.use(express.static('public'));
     app.use(fileUpload({ useTempFiles: true, tempFileDir: path.join(__dirname, 'tmp') }));
 
-    // Render the index page
+    /**
+     * Renders the index page.
+     * @param {express.Request} req - The request object.
+     * @param {express.Response} res - The response object.
+     */
     app.get('/', (req, res) => {
         res.render('index');
     });
 
-    // Handle file upload
+    /**
+     * Handles file upload and PDF signing.
+     * @param {express.Request} req - The request object.
+     * @param {express.Response} res - The response object.
+     */
     app.post('/upload', async (req, res) => {
         if (!req.files || !req.files.files) {
             return res.status(400).send({ message: 'No files were uploaded.' });
@@ -53,13 +62,13 @@ exec('npm install', (error) => {
         try {
             await Promise.all(files.map(file => {
                 const outputPdfPath = path.join(outputPath, `signed_${file.name}`);
-                return signPDFWithPFX(file, outputPdfPath, pfxPath, pfxPassword).then(() => {
+                return signPDFWithSmartCard(file, outputPdfPath, SmartCardPin).then(() => {
                     processedFiles++;
                     // Notify client of progress
                     io.emit('progress', { processed: processedFiles, total: totalFiles });
                 });
             }));
-            rimraf.sync(tmpDir);
+            rimraf.sync(tmpDir); // Remove temporary files and directory
             res.status(200).send({ message: 'PDFs signed successfully.' });
         } catch (error) {
             console.error('Failed to sign PDFs:', error);
@@ -67,8 +76,11 @@ exec('npm install', (error) => {
         }
     });
 
-
-    // List signed PDFs
+    /**
+     * Lists signed PDFs in the output directory.
+     * @param {express.Request} req - The request object.
+     * @param {express.Response} res - The response object.
+     */
     app.get('/list-signed-pdfs', (req, res) => {
         const destinationFolder = 'signed_files';
         const outputPath = path.join(__dirname, destinationFolder);

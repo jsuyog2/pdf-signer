@@ -2,7 +2,7 @@
 
 ## Overview
 
-This application allows users to upload multiple PDF files, sign them with a digital certificate, and store them in a specified destination folder. The application also provides a progress bar during the signing process and lists the signed PDFs.
+This application allows users to upload multiple PDF files, sign them with a digital certificate, and store them in a specified destination folder. It supports signing with PFX certificates or Smart Cards, and provides a progress bar during the signing process. Signed PDFs are listed for easy access.
 
 ## Features
 
@@ -30,7 +30,7 @@ This application allows users to upload multiple PDF files, sign them with a dig
 
 3. **Install Additional Packages:**
 
-    Install the required packages for file handling and cleanup:
+    Install additional required packages:
 
     ```bash
     npm install rimraf @chilkat/ck-node22-win64 express express-fileupload
@@ -40,12 +40,14 @@ This application allows users to upload multiple PDF files, sign them with a dig
 
 1. **Certificates:**
 
-    Place your PFX certificate file in the `key` directory and update the `pfxPath` and `pfxPassword` in `index.js` as needed.
+    Place your PFX certificate file in the `key` directory. Update the `pfxPath` and `pfxPassword` in `index.js`:
 
     ```javascript
     const pfxPath = path.join(__dirname, 'key', 'name.pfx');
     const pfxPassword = '12345'; // Update with your PFX password
     ```
+
+    For signing with Smart Cards, ensure the Smart Card reader is connected and configure the `SmartCardPin` in `index.js`.
 
 2. **Temporary Directory:**
 
@@ -58,7 +60,14 @@ This application allows users to upload multiple PDF files, sign them with a dig
     Run the following command to start the application:
 
     ```bash
-    node index.js
+    npm start
+    ```
+
+    To build the application and run in production mode:
+
+    ```bash
+    npm run build
+    npm run prod
     ```
 
 2. **Access the Application:**
@@ -67,9 +76,16 @@ This application allows users to upload multiple PDF files, sign them with a dig
 
 3. **Upload and Sign PDFs:**
 
-    - Use the form to upload PDF files and select a destination folder.
+    - Use the form to upload PDF files.
     - Monitor the progress bar as the files are signed.
-    - The list of signed PDFs will be updated once the process is complete.
+    - Signed PDFs will be listed once the signing process is complete.
+
+## Configuration Files
+
+- **`.babelrc`**: Configures Babel to use the `@babel/preset-env` preset.
+- **`eslint.config.mjs`**: Configures ESLint with recommended settings for JavaScript.
+- **`tailwind.config.js`**: Configures Tailwind CSS for styling.
+- **`webpack.config.js`**: Configures Webpack for bundling the application.
 
 ## Contributing
 
@@ -111,3 +127,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Tailwind CSS](https://tailwindcss.com/) for styling
 - [Chilkat](https://www.chilkatsoft.com/) for PDF signing functionality
 - [Express](https://expressjs.com/) for server handling
+- [Socket.IO](https://socket.io/) for real-time progress updates
+
+## Contact
+
+For any questions or feedback, you can reach me at [jsuyog2@gmail.com](mailto:jsuyog2@gmail.com).
