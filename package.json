@@ -9,9 +9,13 @@
   },
   "dependencies": {
     "@chilkat/ck-node22-win64": "^9.5099.0",
+    "autoprefixer": "^10.4.20",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-fileupload": "^1.4.0",
-    "opn": "^6.0.0"
+    "opn": "^6.0.0",
+    "rimraf": "^6.0.1",
+    "socket.io": "^4.7.5",
+    "tailwindcss": "^3.4.10"
   }
 }

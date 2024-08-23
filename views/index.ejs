@@ -1,33 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>PDF Sign</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Signer</title>
+    <link rel="stylesheet" href="/styles.css">
 </head>
 
-<body>
-    <div class="container">
-        <h3>PDF Sign</h3>
-        <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
-            <div class="file-field input-field">
-                <div class="btn">
-                    <span>Select Files</span>
-                    <input type="file" name="folder" webkitdirectory directory multiple>
-                </div>
-                <div class="file-path-wrapper">
-                    <input class="file-path validate" type="text" placeholder="Select PDF files">
-                </div>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-semibold mb-4">PDF Signer</h1>
+        <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data" class="space-y-4">
+            <div class="mb-4">
+                <label for="fileUpload" class="block text-lg font-medium">Upload PDF(s):</label>
+                <input type="file" id="fileUpload" name="files" multiple required class="mt-2">
             </div>
-            <button class="btn waves-effect waves-light" type="submit" name="action">Sign PDFs</button>
+            <button type="submit"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Sign
+                PDFs</button>
         </form>
+        <div id="message" class="mt-4"></div>
 
-        <div id="output"></div>
+        <!-- Progress bar -->
+        <div id="progressContainer" class="mt-4 hidden">
+            <p id="progressText" class="font-medium text-gray-700"></p>
+            <div id="progressBar" class="w-full bg-gray-200 rounded-full h-4">
+                <div id="progressFill" class="bg-indigo-600 h-full rounded-full" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <!-- List of signed PDFs -->
+        <div id="pdfList" class="mt-6">
+            <h2 class="text-xl font-semibold mb-2">Signed PDFs</h2>
+            <ul id="pdfListItems" class="list-disc list-inside space-y-1"></ul>
+        </div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/script.js"></script>
 </body>
 
 </html>
