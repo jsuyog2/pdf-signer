@@ -16,7 +16,7 @@ This application allows users to upload multiple PDF files, sign them with a dig
 1. **Clone the Repository:**
 
     ```bash
-    git clone https://github.com/your-username/pdf-signer.git
+    git clone https://github.com/jsuyog2/pdf-signer.git
     cd pdf-signer
     ```
 
